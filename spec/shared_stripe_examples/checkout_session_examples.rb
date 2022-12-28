@@ -97,24 +97,39 @@ shared_examples "Checkout Session API" do
     end
 
     it "can expand payment_intent" do
-      line_items = [
-        {
-          name: "T-shirt",
-          quantity: 2,
-          amount: 500,
-          currency: "usd"
-        }
-      ]
+      checkout_session1
+
+      checkout_session = Stripe::Checkout::Session.retrieve(id: checkout_session1.id, expand: ["payment_intent"])
+
+      expect(checkout_session.payment_intent).to be_a(Stripe::PaymentIntent)
+    end
+
+    it "has customer details" do
+      customer = Stripe::Customer.create({
+        email: 'johnny@appleseed.com',
+        name: 'Johnny Appleseed',
+        source: stripe_helper.generate_card_token
+      })
+
+      line_items = [{
+        name: "T-shirt",
+        quantity: 2,
+        amount: 500,
+        currency: "usd",
+      }]
+
       session = Stripe::Checkout::Session.create(
         payment_method_types: ["card"],
+        customer: customer,
         line_items: line_items,
         cancel_url: "https://example.com/cancel",
         success_url: "https://example.com/success"
       )
 
-      checkout_session = Stripe::Checkout::Session.retrieve(id: session.id, expand: ["payment_intent"])
-
-      expect(checkout_session.payment_intent).to be_a(Stripe::PaymentIntent)
+      checkout_session = Stripe::Checkout::Session.retrieve(session.id)
+      customer_details = checkout_session.customer_details
+      expect(customer_details.email).to eq(customer.email)
+      expect(customer_details.name).to eq(customer.name)
     end
   end
 end

@@ -145,6 +145,17 @@ module StripeMock
           if params[:expand]&.include?('payment_intent')
             checkout_session[:payment_intent] = Stripe::PaymentIntent.retrieve(checkout_session[:payment_intent])
           end
+          if checkout_session[:customer]
+            customer = checkout_session[:customer].is_a?(Stripe::Customer) ? checkout_session[:customer] : Stripe::Customer.retrieve(checkout_session[:customer])
+            checkout_session[:customer_details] = {
+                                                    address: nil,
+                                                    email: customer.email,
+                                                    name: customer.name,
+                                                    phone: nil,
+                                                    tax_exempt: "none",
+                                                    tax_ids: nil
+                                                  }
+          end
           checkout_session
         end
 
