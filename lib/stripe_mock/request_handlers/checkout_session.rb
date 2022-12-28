@@ -48,7 +48,7 @@ module StripeMock
           if line_items
             amount = 0
 
-            line_items.each do |line_item| 
+            line_items.each do |line_item|
               price = prices[line_item[:price]]
 
               if price.nil?
@@ -141,6 +141,9 @@ module StripeMock
           checkout_session = checkout_session.clone
           if params[:expand]&.include?('setup_intent') && checkout_session[:setup_intent]
             checkout_session[:setup_intent] = setup_intents[checkout_session[:setup_intent]]
+          end
+          if params[:expand]&.include?('payment_intent')
+            checkout_session[:payment_intent] = Stripe::PaymentIntent.retrieve(checkout_session[:payment_intent])
           end
           checkout_session
         end

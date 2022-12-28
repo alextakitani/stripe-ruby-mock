@@ -95,5 +95,26 @@ shared_examples "Checkout Session API" do
 
       expect(checkout_session.setup_intent).to be_a_kind_of(Stripe::SetupIntent)
     end
+
+    it "can expand payment_intent" do
+      line_items = [
+        {
+          name: "T-shirt",
+          quantity: 2,
+          amount: 500,
+          currency: "usd"
+        }
+      ]
+      session = Stripe::Checkout::Session.create(
+        payment_method_types: ["card"],
+        line_items: line_items,
+        cancel_url: "https://example.com/cancel",
+        success_url: "https://example.com/success"
+      )
+
+      checkout_session = Stripe::Checkout::Session.retrieve(id: session.id, expand: ["payment_intent"])
+
+      expect(checkout_session.payment_intent).to be_a(Stripe::PaymentIntent)
+    end
   end
 end
