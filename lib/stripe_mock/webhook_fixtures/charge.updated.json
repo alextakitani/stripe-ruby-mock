@@ -45,7 +45,7 @@
       "failure_code": null,
       "amount_refunded": 0,
       "customer": "cus_00000000000000",
-      "invoice": "in_00000000000000",
+      "invoice": "in_000000000000000000000000",
       "description": "Sample description" ,
       "dispute": null,
       "metadata": {
