@@ -24,7 +24,7 @@ module StripeMock
       end
 
       def new_setup_intent(route, method_url, params, headers)
-        id = new_id('si')
+        id = params[:id].presence || new_id('si')
 
         setup_intents[id] = Data.mock_setup_intent(
           params.merge(
