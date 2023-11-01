@@ -96,9 +96,9 @@ module StripeMock
         when "week"
           start_time + (604800 * (interval_count) * intervals)
         when "month"
-          (Time.at(start_time).to_datetime >> ((interval_count) * intervals)).to_time.to_i
+          (Time.zone.at(start_time).to_datetime >> ((interval_count) * intervals)).to_time.to_i
         when "year"
-          (Time.at(start_time).to_datetime >> (12 * intervals)).to_time.to_i # max period is 1 year
+          (Time.zone.at(start_time).to_datetime >> (12 * intervals)).to_time.to_i # max period is 1 year
         else
           start_time
         end
