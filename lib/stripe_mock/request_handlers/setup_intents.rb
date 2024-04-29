@@ -28,7 +28,8 @@ module StripeMock
 
         setup_intents[id] = Data.mock_setup_intent(
           params.merge(
-            id: id
+            id: id,
+            status: status
           )
         )
 
