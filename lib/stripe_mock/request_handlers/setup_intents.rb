@@ -25,6 +25,7 @@ module StripeMock
 
       def new_setup_intent(route, method_url, params, headers)
         id = params[:id].presence || new_id('si')
+        status = params[:payment_method] ? 'requires_action' : 'requires_payment_method'
 
         setup_intents[id] = Data.mock_setup_intent(
           params.merge(
